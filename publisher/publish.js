@@ -113,7 +113,7 @@ async function publishFlake({channel, version, url, date, id}) {
         data: makeFlakeString({channel, version, url, date}),
         overwrite: true
     })
-    var {code} = await $$`git add -A && git commit -m ${tagName} && git tag ${tagName} && git push origin ${tagName}`
+    var {code} = await $$`git add -A && git commit -m ${tagName} && git push && git tag ${tagName} && git push origin ${tagName}`
     var code =0
     const success = code == 0
     // keep track of what has been published
