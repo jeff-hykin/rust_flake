@@ -1,6 +1,7 @@
 #!/usr/bin/env -S deno run --allow-all
 import { FileSystem, glob } from "https://deno.land/x/quickr@0.8.1/main/file_system.js"
 import { setSubtract } from 'https://esm.sh/gh/jeff-hykin/good-js@1.17.2.0/source/flattened/set_subtract.js'
+import { indent } from 'https://esm.sh/gh/jeff-hykin/good-js@1.17.2.0/source/flattened/indent.js'
 // import { jsValueToNix } from "https://esm.sh/gh/jeff-hykin/deno_nix_api@0.1.1.1/tools/basics.js"
 import { jsValueToNix } from "https://esm.sh/gh/jeff-hykin/deno_nix_api@6bc1082/tools/basics.js"
 var allVersionUrls = (await (await fetch(`https://static.rust-lang.org/manifests.txt`)).text()).trim().split("\n")
@@ -70,7 +71,8 @@ async function makeFlakeString({channel, version, url, date}) {
 
     outputs = { self, flake-utils, nixpkgs, fenix, rust-manifest, ... }:
         let
-            supported = ${jsValueToNix(supportedSystemKeywords)};
+            lib = nixpkgs.lib;
+            supported = ${indent({string:jsValueToNix(supportedSystemKeywords), by: "            "})};
             allowedSystems = (lib.lists.filter 
                 (eachName:
                     let
