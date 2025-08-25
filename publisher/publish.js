@@ -141,20 +141,17 @@ async function publishFlake({channel, version, url, date, id}) {
 for (const [channel, versions] of Object.entries(channels)) {
     // only edgecase
     if (channel == "version") {
-        await $$`git checkout rust_versioned`
-        await $$`git merge master`
+        await $`git checkout rust_versioned && git merge master`
         for (let { url, id, date, version } of versions) {
-            console.debug(`version is:`,version)
             // three numbers are required
             if (version.match(/^\d+\.\d+\.\d+$/)) {
                 // must do theses in order
                 // console.log({channel, version, url, date, id})
                 await publishFlake({channel, version, url, date, id})
             }
-            await $$`git checkout master`
-            await $$`git merge rust_versioned`
             break
         }
+        await $$`git checkout master && git merge rust_versioned`
     // 
     // publish by date for all non-version channels
     // 
