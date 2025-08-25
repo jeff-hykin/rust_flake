@@ -72,7 +72,7 @@ async function makeFlakeString({channel, version, url, date}) {
     outputs = { self, flake-utils, nixpkgs, fenix, rust-manifest, ... }:
         let
             lib = nixpkgs.lib;
-            supported = ${indent({string:jsValueToNix(supportedSystemKeywords), by: "            "})};
+            supported = ${indent({string:jsValueToNix(supportedSystemKeywords), by: "            ", noLead: true})};
             allowedSystems = (lib.lists.filter 
                 (eachName:
                     let
