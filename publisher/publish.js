@@ -159,6 +159,7 @@ for (const [channel, versions] of Object.entries(channels)) {
     // only edgecase
     if (channel == "version") {
         await $$`git checkout rust_versioned`
+        await $$`git merge master`
         for (let { url, id, date, version } of versions) {
             console.debug(`version is:`,version)
             // three numbers are required
