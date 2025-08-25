@@ -20,5 +20,6 @@
     "static.rust-lang.org/dist/2022-08-11/channel-rust-1.63.0.toml",
     "static.rust-lang.org/dist/2022-09-22/channel-rust-1.64.0.toml",
     "static.rust-lang.org/dist/2022-11-03/channel-rust-1.65.0.toml",
-    "static.rust-lang.org/dist/2022-12-15/channel-rust-1.66.0.toml"
+    "static.rust-lang.org/dist/2022-12-15/channel-rust-1.66.0.toml",
+    "static.rust-lang.org/dist/2023-01-10/channel-rust-1.66.1.toml"
 ]
