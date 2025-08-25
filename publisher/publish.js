@@ -13,7 +13,8 @@ await FileSystem.write({path:`${FileSystem.thisFolder}/all_versions.json`, data:
 var allSupportedVersions = []
 var markerFound = false
 for (let each of allVersionUrls) {
-    markerFound = markerFound || each == "static.rust-lang.org/dist/2019-02-28/channel-rust-1.33.0.toml"
+    // markerFound = markerFound || each == "static.rust-lang.org/dist/2019-02-28/channel-rust-1.33.0.toml" // 1.32 instantly won't build, the others build but miss .rust until 1.49.0 (and the later version of 1.49.0 at that)
+    markerFound = markerFound || each == "https://static.rust-lang.org/dist/2020-12-31/channel-rust-1.49.0.toml" // 
     if (markerFound) {
         allSupportedVersions.push(each)
     }
@@ -121,7 +122,7 @@ async function publishFlake({channel, version, url, date, id}) {
     })
     await $$`git push --delete origin ${tagName}`
     await $$`git tag --delete ${tagName}`
-    var {code} = await $$`git add -A && git commit -m ${tagName} && git push && git tag ${tagName} && git push origin ${tagName}`
+    // var {code} = await $$`git add -A && git commit -m ${tagName} && git push && git tag ${tagName} && git push origin ${tagName}`
     var code =0
     const success = code == 0
     // keep track of what has been published
