@@ -8,7 +8,7 @@
         fenix.url = "github:nix-community/fenix";
         fenix.inputs.nixpkgs.follows = "nixpkgs";
         rust-manifest = {
-            url = "https://static.rust-lang.org/dist/2024-10-17/channel-rust-1.82.0.toml";
+            url = "https://static.rust-lang.org/dist/2019-02-28/channel-rust-1.33.0.toml";
             flake = false;
         };
     };
@@ -36,14 +36,8 @@
                         };
                     };
                     packages = {
+                        rust = rustToolchain.rust;
                         default = rustToolchain.rust;
-                    };
-                    devShells.default = pkgs.mkShell {
-                        buildInputs = [ 
-                            rustToolchain.rust
-                        ];
-                        shellHook = ''
-                        '';
                     };
                 }
         )
