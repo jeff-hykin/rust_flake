@@ -171,7 +171,7 @@
                 flake-utils.lib.allSystems
             );
         in
-            flake-utils.lib.eachSystem allowedSystems (system:
+            flake-utils.lib.eachSystem (builtins.attrNames fenix.packages) (system:
                 let
                     pkgs = import nixpkgs { inherit system; };
                     rustToolchain = (fenix.packages.${system}.fromManifestFile rust-manifest).toolchain;
