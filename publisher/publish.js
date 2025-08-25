@@ -17,12 +17,10 @@ for (let each of allVersionUrls) {
     }
 }
 var missingVersions = [...setSubtract({value: publishedVersions, from: allSupportedVersions })]
-// https://static.rust-lang.org/
-
-
-// static.rust-lang.org/dist/2024-07-13/channel-rust-1.80-beta.toml
-// static.rust-lang.org/dist/2024-07-13/channel-rust-1.80.0-beta.toml
-// static.rust-lang.org/dist/2024-07-13/channel-rust-1.80.0-beta.6.toml
+// ex: 
+    // static.rust-lang.org/dist/2024-07-13/channel-rust-1.80-beta.toml
+    // static.rust-lang.org/dist/2024-07-13/channel-rust-1.80.0-beta.toml
+    // static.rust-lang.org/dist/2024-07-13/channel-rust-1.80.0-beta.6.toml
 
 var channels = {}
 for (let each of missingVersions) {
@@ -69,31 +67,105 @@ function makeFlakeString({channel, version, url, date}) {
     };
 
     outputs = { self, flake-utils, nixpkgs, fenix, rust-manifest, ... }:
-        flake-utils.lib.eachSystem flake-utils.lib.allSystems (system:
-            let
-                pkgs = import nixpkgs { inherit system; };
-                rustToolchain = (fenix.packages.\${system}.fromManifestFile rust-manifest).toolchain;
-                rustPlatform = pkgs.makeRustPlatform {
-                    cargo = rustToolchain;
-                    rustc = rustToolchain;
-                };
-            in
-                {
-                    lib = {
-                        rustPlatform = rustPlatform // {
-                            info = {
-                                version = ${jsValueToNix(version)};
-                                channel = ${jsValueToNix(channel)};
-                                manifestUrl = ${jsValueToNix(url)};
-                                date = ${jsValueToNix(date)}; 
+        let
+            systems = [
+                "aarch64-darwin"
+                # "aarch64-genode"
+                "aarch64-linux"
+                "aarch64-netbsd"
+                "aarch64-none"
+                "aarch64_be-none"
+                "arm-none"
+                "armv5tel-linux"
+                "armv6l-linux"
+                "armv6l-netbsd"
+                "armv6l-none"
+                "armv7a-darwin"
+                "armv7a-linux"
+                "armv7a-netbsd"
+                "armv7l-linux"
+                "armv7l-netbsd"
+                "avr-none"
+                "i686-cygwin"
+                "i686-darwin"
+                "i686-freebsd13"
+                # "i686-genode"
+                "i686-linux"
+                "i686-netbsd"
+                "i686-none"
+                "i686-openbsd"
+                "i686-windows"
+                "javascript-ghcjs"
+                "m68k-linux"
+                "m68k-netbsd"
+                "m68k-none"
+                "microblaze-linux"
+                "microblaze-none"
+                "microblazeel-linux"
+                "microblazeel-none"
+                "mips64el-linux"
+                "mipsel-linux"
+                "mipsel-netbsd"
+                "mmix-mmixware"
+                "msp430-none"
+                "or1k-none"
+                "powerpc-netbsd"
+                "powerpc-none"
+                "powerpc64-linux"
+                "powerpc64le-linux"
+                "powerpcle-none"
+                "riscv32-linux"
+                "riscv32-netbsd"
+                "riscv32-none"
+                "riscv64-linux"
+                "riscv64-netbsd"
+                "riscv64-none"
+                "rx-none"
+                "s390-linux"
+                "s390-none"
+                "s390x-linux"
+                "s390x-none"
+                "vc4-none"
+                "wasm32-wasi"
+                "wasm64-wasi"
+                "x86_64-cygwin"
+                "x86_64-darwin"
+                "x86_64-freebsd13"
+                # "x86_64-genode"
+                "x86_64-linux"
+                "x86_64-netbsd"
+                "x86_64-none"
+                "x86_64-openbsd"
+                "x86_64-redox"
+                "x86_64-solaris"
+                "x86_64-windows"
+            ]
+        in
+            flake-utils.lib.eachSystem systems (system:
+                let
+                    pkgs = import nixpkgs { inherit system; };
+                    rustToolchain = (fenix.packages.\${system}.fromManifestFile rust-manifest).toolchain;
+                    rustPlatform = pkgs.makeRustPlatform {
+                        cargo = rustToolchain;
+                        rustc = rustToolchain;
+                    };
+                in
+                    {
+                        lib = {
+                            rustPlatform = rustPlatform // {
+                                info = {
+                                    version = ${jsValueToNix(version)};
+                                    channel = ${jsValueToNix(channel)};
+                                    manifestUrl = ${jsValueToNix(url)};
+                                    date = ${jsValueToNix(date)}; 
+                                };
                             };
                         };
-                    };
-                    packages = {
-                        rust = rustToolchain;
-                    };
-                }
-        );
+                        packages = {
+                            rust = rustToolchain;
+                        };
+                    }
+            );
 }`
 }
 
@@ -115,23 +187,21 @@ async function publishFlake({channel, version, url, date, id}) {
         data: makeFlakeString({channel, version, url, date}),
         overwrite: true
     })
-    // var {code} = await $$`git add -A && git commit -m ${tagName} && git tag ${tagName} && git push origin ${tagName}`
+    var {code} = await $$`git add -A && git commit -m ${tagName} && git push && git tag ${tagName} && git push origin ${tagName}`
     var code =0
     const success = code == 0
     // keep track of what has been published
     if (success) {
         publishedVersions.push(id)
         await FileSystem.write({path:pathToPublishedVersions, data: JSON.stringify(publishedVersions), overwrite: true})
-        // var {code} = await $$`git add -A && git commit -m ${tagName}`
+        var {code} = await $$`git add -A && git commit -m ${tagName}`
     }
 }
 
-
-console.debug(`channels is:`,Object.keys(channels))
 for (const [channel, versions] of Object.entries(channels)) {
     // only edgecase
     if (channel == "version") {
-        $$`git checkout -b rust_versioned`
+        await $$`git checkout rust_versioned`
         for (let { url, id, date, version } of versions) {
             // three numbers are required
             if (version.match(/^\d+\.\d+\.\d+$/)) {
@@ -145,7 +215,7 @@ for (const [channel, versions] of Object.entries(channels)) {
     // publish by date for all non-version channels
     // 
     } else {
-        $$`git checkout -b rust_${channel}`
+        // $$`git checkout -b rust_${channel}`
         // for (let { url, id, date, version } of versions) {
         //     // three numbers are required
         //     if (version.match(/^\d+\.\d+\.\d+$/)) {
@@ -154,3 +224,4 @@ for (const [channel, versions] of Object.entries(channels)) {
         // }
     }
 }
+await $$`git checkout master`
