@@ -144,6 +144,9 @@ async function publishFlake({channel, version, url, date, id}) {
         data: await makeFlakeString({channel, version, url, date}),
         overwrite: true
     })
+    await $$`git push --delete origin ${tagName}`
+    await $$`git tag --delete ${tagName}`
+    var {code} = await $$`git add -A && git commit -m ${tagName} && git push && git tag ${tagName} && git push origin ${tagName}`
     var {code} = await $$`git add -A && git commit -m ${tagName} && git push && git tag ${tagName} && git push origin ${tagName}`
     var code =0
     const success = code == 0
