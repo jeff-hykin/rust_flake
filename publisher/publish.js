@@ -125,8 +125,9 @@ async function publishFlake({channel, version, url, date, id}) {
     if (code != 0) {
         throw Error(`nix flake metadata failed`)
     }
-    await $$`git push --delete origin ${tagName}`
     await $$`git tag --delete ${tagName}`
+    await $$`git push --delete origin ${tagName}`
+    await new Promise(r=>setTimeout(r,1000))
     var {code} = await $$`git add -A && git commit -m ${tagName} && git push && git tag ${tagName} && git push origin ${tagName}`
     const success = code == 0
     // keep track of what has been published
