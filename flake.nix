@@ -14,186 +14,29 @@
     };
 
     outputs = { self, flake-utils, nixpkgs, fenix, rust-manifest, ... }:
-        let
-            lib = nixpkgs.lib;
-            supported = [
-                [
-                    "aarch64"
-                    "unknown"
-                    "linux"
-                    "gnu"
-                ]
-                [
-                    "arm"
-                    "unknown"
-                    "linux"
-                    "gnueabi"
-                ]
-                [
-                    "arm"
-                    "unknown"
-                    "linux"
-                    "gnueabihf"
-                ]
-                [
-                    "armv7"
-                    "unknown"
-                    "linux"
-                    "gnueabihf"
-                ]
-                [
-                    "i686"
-                    "apple"
-                    "darwin"
-                ]
-                [
-                    "i686"
-                    "pc"
-                    "windows"
-                    "gnu"
-                ]
-                [
-                    "i686"
-                    "pc"
-                    "windows"
-                    "msvc"
-                ]
-                [
-                    "i686"
-                    "unknown"
-                    "linux"
-                    "gnu"
-                ]
-                [
-                    "mips"
-                    "unknown"
-                    "linux"
-                    "gnu"
-                ]
-                [
-                    "mips64"
-                    "unknown"
-                    "linux"
-                    "gnuabi64"
-                ]
-                [
-                    "mips64el"
-                    "unknown"
-                    "linux"
-                    "gnuabi64"
-                ]
-                [
-                    "mipsel"
-                    "unknown"
-                    "linux"
-                    "gnu"
-                ]
-                [
-                    "powerpc"
-                    "unknown"
-                    "linux"
-                    "gnu"
-                ]
-                [
-                    "powerpc64"
-                    "unknown"
-                    "linux"
-                    "gnu"
-                ]
-                [
-                    "powerpc64le"
-                    "unknown"
-                    "linux"
-                    "gnu"
-                ]
-                [
-                    "s390x"
-                    "unknown"
-                    "linux"
-                    "gnu"
-                ]
-                [
-                    "x86_64"
-                    "apple"
-                    "darwin"
-                ]
-                [
-                    "x86_64"
-                    "pc"
-                    "windows"
-                    "gnu"
-                ]
-                [
-                    "x86_64"
-                    "pc"
-                    "windows"
-                    "msvc"
-                ]
-                [
-                    "x86_64"
-                    "unknown"
-                    "freebsd"
-                ]
-                [
-                    "x86_64"
-                    "unknown"
-                    "linux"
-                    "gnu"
-                ]
-                [
-                    "x86_64"
-                    "unknown"
-                    "netbsd"
-                ]
-            ];
-            allowedSystems = (lib.lists.filter 
-                (eachName:
-                    let
-                        # Step 1: Split name and filter out "none" and "unknown"
-                        nameParts = (lib.lists.filter
-                        (part: part != "none" && part != "unknown")
-                        (lib.strings.splitString "-" eachName)
-                        );
-                        # Step 2: Return true if any of the supported entries contains all nameParts
-                        isSupported = (lib.lists.any 
-                            (supportedParts:
-                                lib.lists.all 
-                                (eachPart:
-                                    (lib.lists.elem eachPart supportedParts)
-                                )
-                                nameParts
-                            )
-                            supported
-                        );
-                    in
-                        isSupported
-                ) 
-                flake-utils.lib.allSystems
-            );
-        in
-            flake-utils.lib.eachSystem allowedSystems (system:
-                let
-                    pkgs = import nixpkgs { inherit system; };
-                    rustToolchain = (fenix.packages.${system}.fromManifestFile rust-manifest).toolchain;
-                    rustPlatform = pkgs.makeRustPlatform {
-                        cargo = rustToolchain;
-                        rustc = rustToolchain;
-                    };
-                in
-                    {
-                        lib = {
-                            rustPlatform = rustPlatform // {
-                                info = {
-                                    version = "1.33.0";
-                                    channel = "stable";
-                                    manifestUrl = "https://static.rust-lang.org/dist/2019-02-28/channel-rust-1.33.0.toml";
-                                    date = "2019-02-28"; 
-                                };
+        flake-utils.lib.eachSystem (builtins.attrNames fenix.packages) (system:
+            let
+                pkgs = import nixpkgs { inherit system; };
+                rustToolchain = (fenix.packages.${system}.fromManifestFile rust-manifest).toolchain;
+                rustPlatform = pkgs.makeRustPlatform {
+                    cargo = rustToolchain;
+                    rustc = rustToolchain;
+                };
+            in
+                {
+                    lib = {
+                        rustPlatform = rustPlatform // {
+                            info = {
+                                version = "1.33.0";
+                                channel = "stable";
+                                manifestUrl = "https://static.rust-lang.org/dist/2019-02-28/channel-rust-1.33.0.toml";
+                                date = "2019-02-28"; 
                             };
                         };
-                        packages = {
-                            rust = rustToolchain;
-                        };
-                    }
-            );
+                    };
+                    packages = {
+                        rust = rustToolchain;
+                    };
+                }
+        );
 }
