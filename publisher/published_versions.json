@@ -50,5 +50,6 @@
     "static.rust-lang.org/dist/2025-01-09/channel-rust-1.84.0.toml",
     "static.rust-lang.org/dist/2025-01-30/channel-rust-1.84.1.toml",
     "static.rust-lang.org/dist/2025-02-20/channel-rust-1.85.0.toml",
-    "static.rust-lang.org/dist/2025-04-03/channel-rust-1.86.0.toml"
+    "static.rust-lang.org/dist/2025-04-03/channel-rust-1.86.0.toml",
+    "static.rust-lang.org/dist/2025-05-15/channel-rust-1.87.0.toml"
 ]
