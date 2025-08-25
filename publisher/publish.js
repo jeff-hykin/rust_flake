@@ -1,7 +1,8 @@
 #!/usr/bin/env -S deno run --allow-all
 import { FileSystem, glob } from "https://deno.land/x/quickr@0.8.1/main/file_system.js"
 import { setSubtract } from 'https://esm.sh/gh/jeff-hykin/good-js@1.17.2.0/source/flattened/set_subtract.js'
-import { jsValueToNix } from "https://esm.sh/gh/jeff-hykin/deno_nix_api@0.1.1.0/tools/basics.js"
+// import { jsValueToNix } from "https://esm.sh/gh/jeff-hykin/deno_nix_api@0.1.1.1/tools/basics.js"
+import { jsValueToNix } from "https://esm.sh/gh/jeff-hykin/deno_nix_api@6bc1082/tools/basics.js"
 var allVersionUrls = (await (await fetch(`https://static.rust-lang.org/manifests.txt`)).text()).trim().split("\n")
 
 var pathToPublishedVersions = `${FileSystem.thisFolder}/published_versions.json`
@@ -49,7 +50,7 @@ for (let each of missingVersions) {
     }
 }
 
-function makeFlakeString({channel, version, url, date}) {
+async function makeFlakeString({channel, version, url, date}) {
     const supportedSystems = (await (await fetch(url)).text()).split("\n").filter(each=>each.match(/^\[pkg\.cargo\.target\./)).map(each=>each.slice(18,-1))
     const supportedSystemKeywords = supportedSystems.map(each=>each.split("-"))
     return `{
@@ -138,7 +139,7 @@ async function publishFlake({channel, version, url, date, id}) {
     }
     await FileSystem.write({
         path:`${FileSystem.thisFolder}/../flake.nix`,
-        data: makeFlakeString({channel, version, url, date}),
+        data: await makeFlakeString({channel, version, url, date}),
         overwrite: true
     })
     var {code} = await $$`git add -A && git commit -m ${tagName} && git push && git tag ${tagName} && git push origin ${tagName}`
