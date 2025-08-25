@@ -90,11 +90,10 @@ async function makeFlakeString({channel, version, url, date}) {
                             };
                         };
                     };
-                };
-                packages = {
-                    rust = rustToolchain;
-                };
-            }
+                    packages = {
+                        rust = rustToolchain;
+                    };
+                }
         );
 }`
 }
