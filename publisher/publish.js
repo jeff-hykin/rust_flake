@@ -125,9 +125,8 @@ async function publishFlake({channel, version, url, date, id}) {
     if (code != 0) {
         throw Error(`nix flake metadata failed`)
     }
-    await $$`git tag --delete ${tagName}`
-    await $$`git push --delete origin ${tagName}`
-    await new Promise(r=>setTimeout(r,1000))
+    // await $$`git tag --delete ${tagName}`
+    // await $$`git push --delete origin ${tagName}`
     var {code} = await $$`git add -A && git commit -m ${tagName} && git push && git tag ${tagName} && git push origin ${tagName}`
     const success = code == 0
     // keep track of what has been published
@@ -148,8 +147,8 @@ for (const [channel, versions] of Object.entries(channels)) {
                 // must do theses in order
                 // console.log({channel, version, url, date, id})
                 await publishFlake({channel, version, url, date, id})
+                await new Promise(r=>setTimeout(r,1000))
             }
-            break
         }
         await $$`git checkout master && git merge rust_versioned`
     // 
