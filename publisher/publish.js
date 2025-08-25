@@ -1,12 +1,22 @@
+#!/usr/bin/env -S deno run --allow-all
 import { FileSystem, glob } from "https://deno.land/x/quickr@0.8.1/main/file_system.js"
 import { setSubtract } from 'https://esm.sh/gh/jeff-hykin/good-js@1.17.2.0/source/flattened/set_subtract.js'
 import { jsValueToNix } from "https://esm.sh/gh/jeff-hykin/deno_nix_api@0.1.1.0/tools/basics.js"
 var allVersionUrls = (await (await fetch(`https://static.rust-lang.org/manifests.txt`)).text()).trim().split("\n")
 
 var pathToPublishedVersions = `${FileSystem.thisFolder}/published_versions.json`
-var publishedVersions = JSON.parse(await FileSystem.read(`${FileSystem.thisFolder}/publisher/published_versions.json`))
 var publishedVersions = JSON.parse(await FileSystem.read(pathToPublishedVersions))
-var missingVersions = [...setSubtract({value: publishedVersions, from: allVersionUrls })]
+await FileSystem.write({path:`${FileSystem.thisFolder}/all_versions.json`, data: JSON.stringify(allVersionUrls,0,4), overwrite: true})
+// super old versions are not supported by fenix
+var allSupportedVersions = []
+var markerFound = false
+for (let each of allVersionUrls) {
+    markerFound = markerFound || each == "static.rust-lang.org/dist/2019-02-28/channel-rust-1.33.0.toml"
+    if (markerFound) {
+        allSupportedVersions.push(each)
+    }
+}
+var missingVersions = [...setSubtract({value: publishedVersions, from: allSupportedVersions })]
 // https://static.rust-lang.org/
 
 
@@ -25,7 +35,7 @@ for (let each of missingVersions) {
             channel = "version"
         }
         const betaVersion = match[4]
-        const url = `https://static.rust-lang.org/${date}/channel-rust-${channel}.toml`
+        const url = `https://${each}`
         channels[channel] = channels[channel] ||[]
         const output = {date, url, id: each}
         if (channel == "version") {
@@ -62,7 +72,7 @@ function makeFlakeString({channel, version, url, date}) {
         flake-utils.lib.eachSystem flake-utils.lib.allSystems (system:
             let
                 pkgs = import nixpkgs { inherit system; };
-                rustToolchain = (fenix.packages.${system}.fromManifestFile rust-manifest).toolchain;
+                rustToolchain = (fenix.packages.\${system}.fromManifestFile rust-manifest).toolchain;
                 rustPlatform = pkgs.makeRustPlatform {
                     cargo = rustToolchain;
                     rustc = rustToolchain;
@@ -70,15 +80,17 @@ function makeFlakeString({channel, version, url, date}) {
             in
                 {
                     lib = {
-                        rustPlatform // { info = { version = ${jsValueToNix(version)}; channel = ${jsValueToNix(channel)}; manifestUrl = ${jsValueToNix(url)}; date = ${jsValueToNix(date)}; }; };
+                        rustPlatform = rustPlatform // {
+                            info = {
+                                version = ${jsValueToNix(version)};
+                                channel = ${jsValueToNix(channel)};
+                                manifestUrl = ${jsValueToNix(url)};
+                                date = ${jsValueToNix(date)}; 
+                            };
+                        };
                     };
                     packages = {
                         rust = rustToolchain;
-                    };
-                    devShells.default = pkgs.mkShell {
-                        buildInputs = [ rustToolchain ];
-                        shellHook = ''
-                        '';
                     };
                 }
         );
@@ -96,23 +108,26 @@ async function publishFlake({channel, version, url, date, id}) {
     let tagName = `${channel}-${version}`
     if (channel == "version") {
         tagName = `v${version}`
+        channel = "stable"
     }
     await FileSystem.write({
-        path:`${FileSystem.thisFolder}/flake.nix`,
+        path:`${FileSystem.thisFolder}/../flake.nix`,
         data: makeFlakeString({channel, version, url, date}),
         overwrite: true
     })
-    var {code} = await $$`git add -A && git commit -m ${tagName} && git tag ${tagName} && git push origin ${tagName}`
+    // var {code} = await $$`git add -A && git commit -m ${tagName} && git tag ${tagName} && git push origin ${tagName}`
+    var code =0
     const success = code == 0
     // keep track of what has been published
     if (success) {
         publishedVersions.push(id)
         await FileSystem.write({path:pathToPublishedVersions, data: JSON.stringify(publishedVersions), overwrite: true})
-        var {code} = await $$`git add -A && git commit -m ${tagName}`
+        // var {code} = await $$`git add -A && git commit -m ${tagName}`
     }
 }
 
 
+console.debug(`channels is:`,Object.keys(channels))
 for (const [channel, versions] of Object.entries(channels)) {
     // only edgecase
     if (channel == "version") {
@@ -120,8 +135,10 @@ for (const [channel, versions] of Object.entries(channels)) {
             // three numbers are required
             if (version.match(/^\d+\.\d+\.\d+$/)) {
                 // must do theses in order
+                // console.log({channel, version, url, date, id})
                 await publishFlake({channel, version, url, date, id})
             }
+            break
         }
     // 
     // publish by date for all non-version channels
@@ -134,5 +151,4 @@ for (const [channel, versions] of Object.entries(channels)) {
         //     }
         // }
     }
-    break
 }
