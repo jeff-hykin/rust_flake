@@ -28,15 +28,14 @@
                     lib = {
                         rustPlatform = rustPlatform // {
                             info = {
-                                version = "1.33.0";
+                                version = "1.49.0";
                                 channel = "stable";
-                                manifestUrl = "https://static.rust-lang.org/dist/2019-02-28/channel-rust-1.33.0.toml";
-                                date = "2019-02-28"; 
+                                manifestUrl = "https://static.rust-lang.org/dist/2020-12-31/channel-rust-1.49.0.toml";
+                                date = "2020-12-31"; 
                             };
                         };
                     };
                     packages = {
-                        rustToolchain = rustToolchain;
                         rust = rustToolchain.rust;
                         default = rustToolchain.rust;
                     };

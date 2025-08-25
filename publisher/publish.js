@@ -14,7 +14,7 @@ var allSupportedVersions = []
 var markerFound = false
 for (let each of allVersionUrls) {
     // markerFound = markerFound || each == "static.rust-lang.org/dist/2019-02-28/channel-rust-1.33.0.toml" // 1.32 instantly won't build, the others build but miss .rust until 1.49.0 (and the later version of 1.49.0 at that)
-    markerFound = markerFound || each == "https://static.rust-lang.org/dist/2020-12-31/channel-rust-1.49.0.toml" // 
+    markerFound = markerFound || each == "static.rust-lang.org/dist/2020-12-31/channel-rust-1.49.0.toml" // 
     if (markerFound) {
         allSupportedVersions.push(each)
     }
@@ -136,13 +136,10 @@ async function publishFlake({channel, version, url, date, id}) {
 
 for (const [channel, versions] of Object.entries(channels)) {
     // only edgecase
-    console.log(`here`)
     if (channel == "version") {
         await $$`git checkout rust_versioned`
         await $$`git merge master`
-    console.log(`here2`)
         for (let { url, id, date, version } of versions) {
-        console.log(`here3`)
             console.debug(`version is:`,version)
             // three numbers are required
             if (version.match(/^\d+\.\d+\.\d+$/)) {
