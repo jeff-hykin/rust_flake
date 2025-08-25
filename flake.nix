@@ -2,6 +2,8 @@
     description = "Rust versions setup via fenix";
 
     inputs = {
+        flake-utils.url = "github:numtide/flake-utils";
+        nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
         fenix.url = "github:nix-community/fenix";
         fenix.inputs.nixpkgs.follows = "nixpkgs";
         rust-manifest = {
@@ -10,10 +12,11 @@
         };
     };
 
-    outputs = { self, libSource, nixpkgs, flakeUtils, xome, ... }:
-        flakeUtils.lib.eachSystem flakeUtils.lib.allSystems (system:
+    outputs = { self, flake-utils, nixpkgs, fenix, rust-manifest, ... }:
+        flake-utils.lib.eachSystem flake-utils.lib.allSystems (system:
             let
-                rustToolchain = (fenix.packages.${system}.fromManifestFile rust-manifest).complete;
+                pkgs = import nixpkgs { inherit system; };
+                rustToolchain = (fenix.packages.${system}.fromManifestFile rust-manifest).toolchain;
                 rustPlatform = pkgs.makeRustPlatform {
                     cargo = rustToolchain;
                     rustc = rustToolchain;
@@ -25,6 +28,11 @@
                     };
                     packages = {
                         rust = rustToolchain;
+                    };
+                    devShells.default = pkgs.mkShell {
+                        buildInputs = [ rustToolchain ];
+                        shellHook = ''
+                        '';
                     };
                 }
         );
