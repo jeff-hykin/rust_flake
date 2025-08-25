@@ -34,10 +34,9 @@
                             };
                         };
                     };
-                };
-                packages = {
-                    rust = rustToolchain;
-                };
-            }
+                    packages = {
+                        rust = rustToolchain;
+                    };
+                }
         );
 }
