@@ -83,13 +83,13 @@
     "rust-manifest": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-6PpL1yqIWNrfbDKhQeFzhqjzIFTfP3pSbXf065CSkKs=",
+        "narHash": "sha256-o3ckRnKvxxyqYKYq4e3IHYFUf14FGo1YbBrDgbGOz9M=",
         "type": "file",
-        "url": "https://static.rust-lang.org/dist/2024-03-28/channel-rust-1.77.1.toml"
+        "url": "https://static.rust-lang.org/dist/2024-04-09/channel-rust-1.77.2.toml"
       },
       "original": {
         "type": "file",
-        "url": "https://static.rust-lang.org/dist/2024-03-28/channel-rust-1.77.1.toml"
+        "url": "https://static.rust-lang.org/dist/2024-04-09/channel-rust-1.77.2.toml"
       }
     },
     "systems": {
