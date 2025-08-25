@@ -121,6 +121,10 @@ async function publishFlake({channel, version, url, date, id}) {
         data: await makeFlakeString({channel, version, url, date}),
         overwrite: true
     })
+    var {code}= await $$`nix flake metadata --json 1>/dev/null`
+    if (code != 0) {
+        throw Error(`nix flake metadata failed`)
+    }
     await $$`git push --delete origin ${tagName}`
     await $$`git tag --delete ${tagName}`
     // var {code} = await $$`git add -A && git commit -m ${tagName} && git push && git tag ${tagName} && git push origin ${tagName}`
