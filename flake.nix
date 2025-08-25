@@ -8,35 +8,109 @@
         fenix.url = "github:nix-community/fenix";
         fenix.inputs.nixpkgs.follows = "nixpkgs";
         rust-manifest = {
-            url = "https://static.rust-lang.org/dist/2019-04-11/channel-rust-1.34.0.toml";
+            url = "https://static.rust-lang.org/dist/2019-02-28/channel-rust-1.33.0.toml";
             flake = false;
         };
     };
 
     outputs = { self, flake-utils, nixpkgs, fenix, rust-manifest, ... }:
-        flake-utils.lib.eachSystem flake-utils.lib.allSystems (system:
-            let
-                pkgs = import nixpkgs { inherit system; };
-                rustToolchain = (fenix.packages.${system}.fromManifestFile rust-manifest).toolchain;
-                rustPlatform = pkgs.makeRustPlatform {
-                    cargo = rustToolchain;
-                    rustc = rustToolchain;
-                };
-            in
-                {
-                    lib = {
-                        rustPlatform = rustPlatform // {
-                            info = {
-                                version = "1.34.0";
-                                channel = "stable";
-                                manifestUrl = "https://static.rust-lang.org/dist/2019-04-11/channel-rust-1.34.0.toml";
-                                date = "2019-04-11"; 
+        let
+            systems = [
+                "aarch64-darwin"
+                # "aarch64-genode"
+                "aarch64-linux"
+                "aarch64-netbsd"
+                "aarch64-none"
+                "aarch64_be-none"
+                "arm-none"
+                "armv5tel-linux"
+                "armv6l-linux"
+                "armv6l-netbsd"
+                "armv6l-none"
+                "armv7a-darwin"
+                "armv7a-linux"
+                "armv7a-netbsd"
+                "armv7l-linux"
+                "armv7l-netbsd"
+                "avr-none"
+                "i686-cygwin"
+                "i686-darwin"
+                "i686-freebsd13"
+                # "i686-genode"
+                "i686-linux"
+                "i686-netbsd"
+                "i686-none"
+                "i686-openbsd"
+                "i686-windows"
+                "javascript-ghcjs"
+                "m68k-linux"
+                "m68k-netbsd"
+                "m68k-none"
+                "microblaze-linux"
+                "microblaze-none"
+                "microblazeel-linux"
+                "microblazeel-none"
+                "mips64el-linux"
+                "mipsel-linux"
+                "mipsel-netbsd"
+                "mmix-mmixware"
+                "msp430-none"
+                "or1k-none"
+                "powerpc-netbsd"
+                "powerpc-none"
+                "powerpc64-linux"
+                "powerpc64le-linux"
+                "powerpcle-none"
+                "riscv32-linux"
+                "riscv32-netbsd"
+                "riscv32-none"
+                "riscv64-linux"
+                "riscv64-netbsd"
+                "riscv64-none"
+                "rx-none"
+                "s390-linux"
+                "s390-none"
+                "s390x-linux"
+                "s390x-none"
+                "vc4-none"
+                "wasm32-wasi"
+                "wasm64-wasi"
+                "x86_64-cygwin"
+                "x86_64-darwin"
+                "x86_64-freebsd13"
+                # "x86_64-genode"
+                "x86_64-linux"
+                "x86_64-netbsd"
+                "x86_64-none"
+                "x86_64-openbsd"
+                "x86_64-redox"
+                "x86_64-solaris"
+                "x86_64-windows"
+            ]
+        in
+            flake-utils.lib.eachSystem systems (system:
+                let
+                    pkgs = import nixpkgs { inherit system; };
+                    rustToolchain = (fenix.packages.${system}.fromManifestFile rust-manifest).toolchain;
+                    rustPlatform = pkgs.makeRustPlatform {
+                        cargo = rustToolchain;
+                        rustc = rustToolchain;
+                    };
+                in
+                    {
+                        lib = {
+                            rustPlatform = rustPlatform // {
+                                info = {
+                                    version = "1.33.0";
+                                    channel = "stable";
+                                    manifestUrl = "https://static.rust-lang.org/dist/2019-02-28/channel-rust-1.33.0.toml";
+                                    date = "2019-02-28"; 
+                                };
                             };
                         };
-                    };
-                    packages = {
-                        rust = rustToolchain;
-                    };
-                }
-        );
+                        packages = {
+                            rust = rustToolchain;
+                        };
+                    }
+            );
 }
