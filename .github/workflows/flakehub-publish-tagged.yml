@@ -16,12 +16,14 @@ jobs:
       id-token: "write"
       contents: "read"
     steps:
-      - uses: "actions/checkout@v3"
+      - uses: "actions/checkout@v5"
         with:
+          persist-credentials: false
           ref: "${{ (inputs.tag != null) && format('refs/tags/{0}', inputs.tag) || '' }}"
-      - uses: "DeterminateSystems/nix-installer-action@main"
+      - uses: "DeterminateSystems/determinate-nix-action@v3"
       - uses: "DeterminateSystems/flakehub-push@main"
         with:
           visibility: "public"
           name: "jeff-hykin/rust"
           tag: "${{ inputs.tag }}"
+          include-output-paths: true
