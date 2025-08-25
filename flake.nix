@@ -35,6 +35,7 @@
                         };
                     };
                     packages = {
+                        default = rustToolchain;
                         rust = rustToolchain;
                     };
                 }
