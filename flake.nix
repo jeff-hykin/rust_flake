@@ -8,7 +8,7 @@
         fenix.url = "github:nix-community/fenix";
         fenix.inputs.nixpkgs.follows = "nixpkgs";
         rust-manifest = {
-            url = "https://static.rust-lang.org/dist/2019-02-28/channel-rust-1.33.0.toml";
+            url = "https://static.rust-lang.org/dist/2024-10-17/channel-rust-1.82.0.toml";
             flake = false;
         };
     };
@@ -17,7 +17,8 @@
         flake-utils.lib.eachSystem (builtins.attrNames fenix.packages) (system:
             let
                 pkgs = import nixpkgs { inherit system; };
-                rustToolchain = (fenix.packages.${system}.fromManifestFile rust-manifest).toolchain;
+                localFenix = fenix.packages.${system};
+                rustToolchain = (localFenix.fromManifestFile rust-manifest);
                 rustPlatform = pkgs.makeRustPlatform {
                     cargo = rustToolchain;
                     rustc = rustToolchain;
@@ -35,8 +36,14 @@
                         };
                     };
                     packages = {
-                        default = rustToolchain;
-                        rust = rustToolchain;
+                        default = rustToolchain.rust;
+                    };
+                    devShells.default = pkgs.mkShell {
+                        buildInputs = [ 
+                            rustToolchain.rust
+                        ];
+                        shellHook = ''
+                        '';
                     };
                 }
         )

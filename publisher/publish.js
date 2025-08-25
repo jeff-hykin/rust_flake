@@ -73,7 +73,8 @@ async function makeFlakeString({channel, version, url, date}) {
         flake-utils.lib.eachSystem (builtins.attrNames fenix.packages) (system:
             let
                 pkgs = import nixpkgs { inherit system; };
-                rustToolchain = (fenix.packages.\${system}.fromManifestFile rust-manifest).toolchain;
+                localFenix = fenix.packages.${system};
+                rustToolchain = (localFenix.fromManifestFile rust-manifest);
                 rustPlatform = pkgs.makeRustPlatform {
                     cargo = rustToolchain;
                     rustc = rustToolchain;
@@ -91,8 +92,8 @@ async function makeFlakeString({channel, version, url, date}) {
                         };
                     };
                     packages = {
-                        default = rustToolchain;
-                        rust = rustToolchain;
+                        rust = rustToolchain.rust;
+                        default = rustToolchain.rust;
                     };
                 }
         )
