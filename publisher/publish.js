@@ -91,6 +91,7 @@ async function makeFlakeString({channel, version, url, date}) {
                         };
                     };
                     packages = {
+                        default = rustToolchain;
                         rust = rustToolchain;
                     };
                 }
