@@ -14,7 +14,7 @@
     };
 
     outputs = { self, flake-utils, nixpkgs, fenix, rust-manifest, ... }:
-        flake-utils.lib.eachSystem (builtin.attrNames fenix.packages) (system:
+        flake-utils.lib.eachSystem (builtins.attrNames fenix.packages) (system:
             let
                 pkgs = import nixpkgs { inherit system; };
                 rustToolchain = (fenix.packages.${system}.fromManifestFile rust-manifest).toolchain;
@@ -38,5 +38,6 @@
                         rust = rustToolchain;
                     };
                 }
-        );
+        )
+    ;
 }
