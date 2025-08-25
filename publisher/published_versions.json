@@ -4,5 +4,6 @@
     "static.rust-lang.org/dist/2021-03-25/channel-rust-1.51.0.toml",
     "static.rust-lang.org/dist/2021-05-06/channel-rust-1.52.0.toml",
     "static.rust-lang.org/dist/2021-05-10/channel-rust-1.52.1.toml",
-    "static.rust-lang.org/dist/2021-06-17/channel-rust-1.53.0.toml"
+    "static.rust-lang.org/dist/2021-06-17/channel-rust-1.53.0.toml",
+    "static.rust-lang.org/dist/2021-07-29/channel-rust-1.54.0.toml"
 ]
