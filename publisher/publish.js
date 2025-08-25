@@ -115,6 +115,7 @@ async function publishFlake({channel, version, url, date, id}) {
         tagName = `v${version}`
         channel = "stable"
     }
+    console.log(`writing`)
     await FileSystem.write({
         path:`${FileSystem.thisFolder}/../flake.nix`,
         data: await makeFlakeString({channel, version, url, date}),
@@ -135,10 +136,13 @@ async function publishFlake({channel, version, url, date, id}) {
 
 for (const [channel, versions] of Object.entries(channels)) {
     // only edgecase
+    console.log(`here`)
     if (channel == "version") {
         await $$`git checkout rust_versioned`
         await $$`git merge master`
+    console.log(`here2`)
         for (let { url, id, date, version } of versions) {
+        console.log(`here3`)
             console.debug(`version is:`,version)
             // three numbers are required
             if (version.match(/^\d+\.\d+\.\d+$/)) {
