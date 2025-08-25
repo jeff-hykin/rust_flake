@@ -1,4 +1,5 @@
 [
     "static.rust-lang.org/dist/2020-12-31/channel-rust-1.49.0.toml",
-    "static.rust-lang.org/dist/2021-02-11/channel-rust-1.50.0.toml"
+    "static.rust-lang.org/dist/2021-02-11/channel-rust-1.50.0.toml",
+    "static.rust-lang.org/dist/2021-03-25/channel-rust-1.51.0.toml"
 ]
