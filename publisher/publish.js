@@ -147,7 +147,7 @@ for (const [channel, versions] of Object.entries(channels)) {
                 // must do theses in order
                 // console.log({channel, version, url, date, id})
                 await publishFlake({channel, version, url, date, id})
-                await new Promise(r=>setTimeout(r,1000))
+                await new Promise(r=>setTimeout(r,2000))
                 console.log(``)
                 console.log(``)
                 console.log(``)
