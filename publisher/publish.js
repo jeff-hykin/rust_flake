@@ -139,7 +139,7 @@ function makeFlakeString({channel, version, url, date}) {
                 "x86_64-redox"
                 "x86_64-solaris"
                 "x86_64-windows"
-            ]
+            ];
         in
             flake-utils.lib.eachSystem systems (system:
                 let
@@ -203,6 +203,7 @@ for (const [channel, versions] of Object.entries(channels)) {
     if (channel == "version") {
         await $$`git checkout rust_versioned`
         for (let { url, id, date, version } of versions) {
+            console.debug(`version is:`,version)
             // three numbers are required
             if (version.match(/^\d+\.\d+\.\d+$/)) {
                 // must do theses in order
