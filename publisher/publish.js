@@ -17,12 +17,10 @@ for (let each of allVersionUrls) {
     }
 }
 var missingVersions = [...setSubtract({value: publishedVersions, from: allSupportedVersions })]
-// https://static.rust-lang.org/
-
-
-// static.rust-lang.org/dist/2024-07-13/channel-rust-1.80-beta.toml
-// static.rust-lang.org/dist/2024-07-13/channel-rust-1.80.0-beta.toml
-// static.rust-lang.org/dist/2024-07-13/channel-rust-1.80.0-beta.6.toml
+// ex: 
+    // static.rust-lang.org/dist/2024-07-13/channel-rust-1.80-beta.toml
+    // static.rust-lang.org/dist/2024-07-13/channel-rust-1.80.0-beta.toml
+    // static.rust-lang.org/dist/2024-07-13/channel-rust-1.80.0-beta.6.toml
 
 var channels = {}
 for (let each of missingVersions) {
@@ -126,12 +124,10 @@ async function publishFlake({channel, version, url, date, id}) {
     }
 }
 
-
-console.debug(`channels is:`,Object.keys(channels))
 for (const [channel, versions] of Object.entries(channels)) {
     // only edgecase
     if (channel == "version") {
-        $$`git checkout -b rust_versioned`
+        await $$`git checkout -b rust_versioned`
         for (let { url, id, date, version } of versions) {
             // three numbers are required
             if (version.match(/^\d+\.\d+\.\d+$/)) {
@@ -145,7 +141,7 @@ for (const [channel, versions] of Object.entries(channels)) {
     // publish by date for all non-version channels
     // 
     } else {
-        $$`git checkout -b rust_${channel}`
+        // $$`git checkout -b rust_${channel}`
         // for (let { url, id, date, version } of versions) {
         //     // three numbers are required
         //     if (version.match(/^\d+\.\d+\.\d+$/)) {
