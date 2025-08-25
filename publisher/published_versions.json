@@ -36,5 +36,6 @@
     "static.rust-lang.org/dist/2023-11-16/channel-rust-1.74.0.toml",
     "static.rust-lang.org/dist/2023-12-07/channel-rust-1.74.1.toml",
     "static.rust-lang.org/dist/2023-12-28/channel-rust-1.75.0.toml",
-    "static.rust-lang.org/dist/2024-02-08/channel-rust-1.76.0.toml"
+    "static.rust-lang.org/dist/2024-02-08/channel-rust-1.76.0.toml",
+    "static.rust-lang.org/dist/2024-03-21/channel-rust-1.77.0.toml"
 ]
