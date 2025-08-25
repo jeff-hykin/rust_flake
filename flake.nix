@@ -8,7 +8,7 @@
         fenix.url = "github:nix-community/fenix";
         fenix.inputs.nixpkgs.follows = "nixpkgs";
         rust-manifest = {
-            url = "https://static.rust-lang.org/dist/2019-04-11/channel-rust-1.34.0.toml";
+            url = "https://static.rust-lang.org/dist/2019-02-28/channel-rust-1.33.0.toml";
             flake = false;
         };
     };
@@ -16,7 +16,7 @@
     outputs = { self, flake-utils, nixpkgs, fenix, rust-manifest, ... }:
         let
             lib = nixpkgs.lib;
-            supported =             [
+            supported = [
                 [
                     "aarch64"
                     "unknown"
@@ -171,7 +171,7 @@
                 flake-utils.lib.allSystems
             );
         in
-            flake-utils.lib.eachSystem allowedSystems (system:
+            flake-utils.lib.eachSystem (builtin.attrNames fenix.packages) (system:
                 let
                     pkgs = import nixpkgs { inherit system; };
                     rustToolchain = (fenix.packages.${system}.fromManifestFile rust-manifest).toolchain;
@@ -184,10 +184,10 @@
                         lib = {
                             rustPlatform = rustPlatform // {
                                 info = {
-                                    version = "1.34.0";
+                                    version = "1.33.0";
                                     channel = "stable";
-                                    manifestUrl = "https://static.rust-lang.org/dist/2019-04-11/channel-rust-1.34.0.toml";
-                                    date = "2019-04-11"; 
+                                    manifestUrl = "https://static.rust-lang.org/dist/2019-02-28/channel-rust-1.33.0.toml";
+                                    date = "2019-02-28"; 
                                 };
                             };
                         };
