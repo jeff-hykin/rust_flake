@@ -131,6 +131,7 @@ console.debug(`channels is:`,Object.keys(channels))
 for (const [channel, versions] of Object.entries(channels)) {
     // only edgecase
     if (channel == "version") {
+        $$`git checkout -b rust_versioned`
         for (let { url, id, date, version } of versions) {
             // three numbers are required
             if (version.match(/^\d+\.\d+\.\d+$/)) {
@@ -144,6 +145,7 @@ for (const [channel, versions] of Object.entries(channels)) {
     // publish by date for all non-version channels
     // 
     } else {
+        $$`git checkout -b rust_${channel}`
         // for (let { url, id, date, version } of versions) {
         //     // three numbers are required
         //     if (version.match(/^\d+\.\d+\.\d+$/)) {
