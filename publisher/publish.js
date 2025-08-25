@@ -193,7 +193,7 @@ async function publishFlake({channel, version, url, date, id}) {
     // keep track of what has been published
     if (success) {
         publishedVersions.push(id)
-        await FileSystem.write({path:pathToPublishedVersions, data: JSON.stringify(publishedVersions), overwrite: true})
+        await FileSystem.write({path:pathToPublishedVersions, data: JSON.stringify(publishedVersions,0,4), overwrite: true})
         var {code} = await $$`git add -A && git commit -m ${tagName}`
     }
 }
