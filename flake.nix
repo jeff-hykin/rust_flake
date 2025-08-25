@@ -8,7 +8,7 @@
         fenix.url = "github:nix-community/fenix";
         fenix.inputs.nixpkgs.follows = "nixpkgs";
         rust-manifest = {
-            url = "https://static.rust-lang.org/dist/2023-01-10/channel-rust-1.66.1.toml";
+            url = "https://static.rust-lang.org/dist/2023-01-26/channel-rust-1.67.0.toml";
             flake = false;
         };
     };
@@ -28,10 +28,10 @@
                     lib = {
                         rustPlatform = rustPlatform // {
                             info = {
-                                version = "1.66.1";
+                                version = "1.67.0";
                                 channel = "stable";
-                                manifestUrl = "https://static.rust-lang.org/dist/2023-01-10/channel-rust-1.66.1.toml";
-                                date = "2023-01-10"; 
+                                manifestUrl = "https://static.rust-lang.org/dist/2023-01-26/channel-rust-1.67.0.toml";
+                                date = "2023-01-26"; 
                             };
                         };
                     };
