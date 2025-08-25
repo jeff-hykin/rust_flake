@@ -144,14 +144,17 @@ async function publishFlake({channel, version, url, date, id}) {
         data: await makeFlakeString({channel, version, url, date}),
         overwrite: true
     })
+    await $$`git push --delete origin ${tagName}`
+    await $$`git tag --delete ${tagName}`
+    var {code} = await $$`git add -A && git commit -m ${tagName} && git push && git tag ${tagName} && git push origin ${tagName}`
     var {code} = await $$`git add -A && git commit -m ${tagName} && git push && git tag ${tagName} && git push origin ${tagName}`
     var code =0
     const success = code == 0
     // keep track of what has been published
     if (success) {
-        publishedVersions.push(id)
-        await FileSystem.write({path:pathToPublishedVersions, data: JSON.stringify(publishedVersions,0,4), overwrite: true})
-        var {code} = await $$`git add -A && git commit -m ${tagName}`
+        // publishedVersions.push(id)
+        // await FileSystem.write({path:pathToPublishedVersions, data: JSON.stringify(publishedVersions,0,4), overwrite: true})
+        // var {code} = await $$`git add -A && git commit -m ${tagName}`
     }
 }
 
@@ -159,6 +162,7 @@ for (const [channel, versions] of Object.entries(channels)) {
     // only edgecase
     if (channel == "version") {
         await $$`git checkout rust_versioned`
+        await $$`git merge master`
         for (let { url, id, date, version } of versions) {
             console.debug(`version is:`,version)
             // three numbers are required
