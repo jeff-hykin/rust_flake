@@ -86,7 +86,7 @@
                 "x86_64-redox"
                 "x86_64-solaris"
                 "x86_64-windows"
-            ]
+            ];
         in
             flake-utils.lib.eachSystem systems (system:
                 let
