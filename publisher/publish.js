@@ -143,6 +143,8 @@ for (const [channel, versions] of Object.entries(channels)) {
                 // console.log({channel, version, url, date, id})
                 await publishFlake({channel, version, url, date, id})
             }
+            await $$`git checkout master`
+            await $$`git merge rust_versioned`
             break
         }
     // 
