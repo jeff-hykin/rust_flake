@@ -4451,5 +4451,17 @@
     "static.rust-lang.org/dist/2025-08-22/channel-rust-1.90.0-beta.toml",
     "static.rust-lang.org/dist/2025-08-23/channel-rust-nightly.toml",
     "static.rust-lang.org/dist/2025-08-24/channel-rust-nightly.toml",
-    "static.rust-lang.org/dist/2025-08-25/channel-rust-nightly.toml"
+    "static.rust-lang.org/dist/2025-08-25/channel-rust-nightly.toml",
+    "static.rust-lang.org/dist/2025-08-26/channel-rust-nightly.toml",
+    "static.rust-lang.org/dist/2025-08-27/channel-rust-nightly.toml",
+    "static.rust-lang.org/dist/2025-08-28/channel-rust-nightly.toml",
+    "static.rust-lang.org/dist/2025-08-29/channel-rust-nightly.toml",
+    "static.rust-lang.org/dist/2025-08-30/channel-rust-nightly.toml",
+    "static.rust-lang.org/dist/2025-08-30/channel-rust-beta.toml",
+    "static.rust-lang.org/dist/2025-08-30/channel-rust-1.90-beta.toml",
+    "static.rust-lang.org/dist/2025-08-30/channel-rust-1.90.0-beta.7.toml",
+    "static.rust-lang.org/dist/2025-08-30/channel-rust-1.90.0-beta.toml",
+    "static.rust-lang.org/dist/2025-08-31/channel-rust-nightly.toml",
+    "static.rust-lang.org/dist/2025-09-01/channel-rust-nightly.toml",
+    "static.rust-lang.org/dist/2025-09-02/channel-rust-nightly.toml"
 ]
